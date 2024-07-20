@@ -112,6 +112,8 @@
     "out/**/*",
     "node_modules",
     "eslint.config.mjs",
+    ".testlintrc.js",
+    "jest.config.js",
     ".vscode-test",
     "out/**/*",
     "test_project/**/*",
