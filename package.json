@@ -59,7 +59,7 @@
         "path": "./syntaxes/tyrano.tmLanguage.json",
         "embeddedLanguages": {
           "source.js": "html",
-          "meta.embedded.block.html": "html"
+          "meta.text.html.basic": "html"
         }
       }
     ],

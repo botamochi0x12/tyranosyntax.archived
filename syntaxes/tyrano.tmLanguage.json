@@ -106,6 +106,7 @@
       ]
     },
     "html1": {
+      "contentName": "meta.text.html.basic",
       "begin": "\\s*(\\[)((?i:html))[\\s]*(\\])",
       "beginCaptures": {
         "1": {
@@ -150,6 +151,7 @@
       ]
     },
     "html2": {
+      "contentName": "meta.text.html.basic",
       "begin": "(\\s*@)((?i:html))[\\s]*\\b",
       "beginCaptures": {
         "1": {
@@ -176,7 +178,7 @@
       },
       "patterns": [
         {
-          "include": "source.js"
+          "include": "text.html.basic"
         }
       ]
     },
