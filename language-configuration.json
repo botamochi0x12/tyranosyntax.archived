@@ -55,6 +55,10 @@
   ],
   "wordPattern": "[a-zA-Z0-9_/\\.]+",
   "folding": {
+    // TODO: |
+    //   The other blocks composed of `macro` and `endmacro`
+    //   should be implemented within an instance of `FoldingProvider`.
+    // The block surrounded by `;#region{{line-break}};#endregion` can be folded.
     "markers": {
       "start": "^\\s*;?region\\b",
       "end": "^\\s*;?endregion\\b"
