@@ -42,6 +42,7 @@
     ["(", ")"],
     ["\"", "\""],
     ["'", "'"],
+    ["`", "`"],
     { "open": "/*", "close": "*/", "notIn": ["comment", "string"] }
   ],
   // symbols that can be used to surround a selection
@@ -51,6 +52,7 @@
     ["(", ")"],
     ["\"", "\""],
     ["'", "'"],
+    ["`", "`"]
   ],
   "wordPattern": "[a-zA-Z0-9_/\\.]+",
   "folding": {
