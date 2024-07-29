@@ -10,30 +10,6 @@
     ["{", "}"],
     ["[", "]"],
     ["(", ")"]
-    //自動インデントとかやりたいけど勝手にコーディング規約のようなものを決めていいのだろうか……？
-    //勝手にハイライトされてしまうので何かしらで修正必要
-    // ["nowait","endnowait"],
-    // ["skipstart","skipstop"],
-    // ["autostart","autostop"],
-    // ["nolog","endnolog"],
-    // ["link","endlink"],
-    // ["vibrate","vibrate_stop"],
-    // ["keyframe","endkeyframe"],
-    // ["kanim","stop_kanim"],
-    // ["xanim","stop_xanim"],
-    // ["html","endhtml"],
-    // ["if","endif"],
-    // ["elseif",""],
-    // ["else",""],
-    // ["macro","endmacro"],
-    // ["ignore","endignore"],
-    // ["iscript","endscript"],
-    // ["vostart","vostop"],
-    // ["speak_on","speak_off"],
-    // ["3d_event_start","3d_event_stop"],
-    // ["3d_anim","3d_anim_stop"],
-    // ["3d_gyro","3d_gyro_stop"],
-    // ["bgcamera","stop_bgcamera"],
   ],
   // symbols that are auto closed when typing
   "autoClosingPairs": [
@@ -44,6 +20,14 @@
     ["'", "'"],
     ["`", "`"],
     { "open": "/*", "close": "*/", "notIn": ["comment", "string"] }
+    /* NOTE: |
+        The pair `["@macro", "@endmacro"]` generates `@macro@endmacro`,
+        and the pair `["@macro", "\n@endmacro"]` generates `@macro\n@endmacro` literally.
+    */
+    /* NOTE: |
+        The pair `["[macro]", "[endmacro]"]` generates `[macro][endmacro]`
+        given putting the sequence `[macro` and then putting a token `]`.
+    */
   ],
   // symbols that can be used to surround a selection
   "surroundingPairs": [
@@ -55,6 +39,152 @@
     ["`", "`"]
   ],
   "wordPattern": "[a-zA-Z0-9_/\\.]+",
+  "onEnterRules": [
+    //自動インデントとかやりたいけど勝手にコーディング規約のようなものを決めていいのだろうか……？
+    /* NOTE: |
+        Given the code is `[macro]{{cursor}}[endmacro]` and when pushing the `enter` key,
+        then would be `[macro]\n\s{4}{{cursor}}\n[endmacro]`.
+
+        ```
+        [macro]|[endmacro]
+        ```
+
+        ```
+        [macro]
+            |
+        [endmacro]
+        ```
+     */
+     /* NOTE: It is better that expanding `[macro]|` to `[macro][endmacro]` by snippets
+     */
+    {
+      "beforeText": { "pattern": "\\[nowait\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endnowait\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[skipstart\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[skipstop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[autostart\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[autostop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[nolog\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endnolog\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[link\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endlink\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[vibrate\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[vibrate_stop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[keyframe\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endkeyframe\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[kanim\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[stop_kanim\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[xanim\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[stop_xanim\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[html\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endhtml\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[macro\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endmacro\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[ignore\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endignore\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[iscript\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[endscript\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[vostart\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[vostop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[speak_on\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[speak_off\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[3d_event_start\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[3d_event_stop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[3d_anim\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[3d_anim_stop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[3d_gyro\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[3d_gyro_stop\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[bgcamera\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[stop_bgcamera\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[tb_start_tyrano_code\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[_tb_end_tyrano_code\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    /* NOTE: |
+        Some people define such pairs as `[act]` and `[/act]`.
+        This can be useful for the detection of a pair of a opening tag and a closing tag.
+
+        ```jsonc
+        {
+          "beforeText": { "pattern": "\\[\\w+\\]", "flags": "i" },
+          "afterText": { "pattern": "\\[/\\w+\\]", "flags": "i" },
+          "action": { "indent": "indentOutdent" }
+        },
+        ```
+    */
+    {
+      "beforeText": { "pattern": "\\[if\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[(?:elsif|else|endif)\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[elsif\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[(?:else|endif)\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    },
+    {
+      "beforeText": { "pattern": "\\[else\\]", "flags": "i" },
+      "afterText": { "pattern": "\\[(?:endif)\\]", "flags": "i" },
+      "action": { "indent": "indentOutdent" }
+    }
+  ],
   "folding": {
     // TODO: |
     //   The other blocks composed of `macro` and `endmacro`
