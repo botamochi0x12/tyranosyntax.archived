@@ -56,9 +56,6 @@ ${textCopy.join("  \n")}
     //chara/akane/angry.png
     const markdownText = new vscode.MarkdownString(`${paramValue}<br>`);
     markdownText.appendMarkdown(`<img src="${paramValue}" width=350>`);
-    markdownText.supportHtml = true;
-    markdownText.isTrusted = true;
-    markdownText.supportThemeIcons = true;
     //data/fgimage
     markdownText.baseUri = vscode.Uri.file(
       path.join(projectPath, defaultPath, path.sep),
