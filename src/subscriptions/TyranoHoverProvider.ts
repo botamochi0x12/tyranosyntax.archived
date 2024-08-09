@@ -106,6 +106,11 @@ ${textCopy.join("  \n")}
         .get("TyranoScript syntax.tag.parameter")!;
       const defaultPath = tagParams[tag][parameter]["path"]; // data/bgimage
 
+      const SUPPORTED_PARAMETER_KEYS = ["storage"];
+      if (!SUPPORTED_PARAMETER_KEYS.includes(parameter)) {
+        return Promise.reject("unsupported parameter key");
+      }
+
       return new vscode.Hover(
         await this.createImageViewMarkdownText(
           parameterValue,
