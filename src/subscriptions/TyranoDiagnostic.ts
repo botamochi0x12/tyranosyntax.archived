@@ -1,21 +1,24 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
-import * as path from "path";
 import { InformationWorkSpace as workspace } from "../InformationWorkSpace";
-import { TextDecoder } from "util";
-import { ErrorLevel, TyranoLogger } from "../TyranoLogger";
+import { TyranoLogger } from "../TyranoLogger";
 import { Parser } from "../Parser";
 
+type UriAndMaybeDiagnostics = [
+  vscode.Uri,
+  readonly vscode.Diagnostic[] | undefined,
+];
+
 export class TyranoDiagnostic {
-  public static diagnosticCollection: vscode.DiagnosticCollection =
+  public static readonly diagnosticCollection =
     vscode.languages.createDiagnosticCollection("tyranoDiagnostic");
 
   //ファイルパス取得用
-  private readonly infoWs: workspace = workspace.getInstance();
-  private parser: Parser = Parser.getInstance();
+  private readonly infoWs = workspace.getInstance();
+  private readonly parser = Parser.getInstance();
 
   //ティラノスクリプトのプロジェクトのルートパス
-  private readonly tyranoProjectPaths: string[] =
+  private readonly tyranoProjectPaths =
     this.infoWs.getTyranoScriptProjectRootPaths();
 
   //パーサー
@@ -45,9 +48,7 @@ export class TyranoDiagnostic {
   }
 
   /**
-   *
    * @param changedTextDocumentPath 変更されたテキストドキュメント、もしくは現在のアクティブテキストエディタのパス
-   * @returns
    */
   public async createDiagnostics(changedTextDocumentPath: string | undefined) {
     //変更されたテキストエディタが無いなら診断しない
@@ -68,10 +69,8 @@ export class TyranoDiagnostic {
     );
 
     TyranoLogger.print(`diagnostic start.`);
-    const diagnosticArray: [
-      vscode.Uri,
-      readonly vscode.Diagnostic[] | undefined,
-    ][] = [];
+
+    const diagnosticArray: UriAndMaybeDiagnostics[] = [];
 
     TyranoLogger.print(`[${diagnosticProjectPath}] parsing start.`);
 
@@ -132,10 +131,10 @@ export class TyranoDiagnostic {
   private async detectionNotDefineMacro(
     tyranoTag: string[],
     absoluteScenarioFilePathMap: Map<string, vscode.TextDocument>,
-    diagnosticArray: any[],
+    diagnosticArray: UriAndMaybeDiagnostics[],
     projectPath: string,
   ) {
-    for (const [filePath, scenarioDocument] of absoluteScenarioFilePathMap) {
+    for (const [, scenarioDocument] of absoluteScenarioFilePathMap) {
       const projectPathOfDiagFile = await this.infoWs.getProjectPathByFilePath(
         scenarioDocument.fileName,
       );
@@ -145,8 +144,8 @@ export class TyranoDiagnostic {
       }
 
       const parsedData = this.parser.parseText(scenarioDocument.getText()); //構文解析
-      let diagnostics: vscode.Diagnostic[] = [];
-      for (let data of parsedData) {
+      const diagnostics: vscode.Diagnostic[] = [];
+      for (const data of parsedData) {
         //early return
         if (data["name"] === "comment") {
           continue;
@@ -185,10 +184,10 @@ export class TyranoDiagnostic {
    */
   private async detectionNotExistScenarioAndLabels(
     absoluteScenarioFilePathMap: Map<string, vscode.TextDocument>,
-    diagnosticArray: any[],
+    diagnosticArray: UriAndMaybeDiagnostics[],
     projectPath: string,
   ) {
-    for (const [filePath, scenarioDocument] of absoluteScenarioFilePathMap) {
+    for (const [_filePath, scenarioDocument] of absoluteScenarioFilePathMap) {
       const projectPathOfDiagFile = await this.infoWs.getProjectPathByFilePath(
         scenarioDocument.fileName,
       );
@@ -198,8 +197,8 @@ export class TyranoDiagnostic {
       }
 
       const parsedData = this.parser.parseText(scenarioDocument.getText()); //構文解析
-      let diagnostics: vscode.Diagnostic[] = [];
-      for (let data of parsedData) {
+      const diagnostics: vscode.Diagnostic[] = [];
+      for (const data of parsedData) {
         if (data["name"] === "comment") {
           continue;
         }
@@ -207,7 +206,7 @@ export class TyranoDiagnostic {
         //storageに付いての処理(指定したファイルが有るかどうか)
         if (this.JUMP_TAG.includes(data["name"])) {
           if (data["pm"]["storage"] !== undefined) {
-            const tagFirstIndex: number = scenarioDocument
+            const tagFirstIndex = scenarioDocument
               .lineAt(data["line"])
               .text.indexOf(data["pm"]["storage"]); // 該当行からタグの定義場所(開始位置)探す
             const tagLastIndex =
@@ -226,7 +225,7 @@ export class TyranoDiagnostic {
 
             if (this.isValueIsIncludeVariable(data["pm"]["storage"])) {
               if (!this.isExistAmpersandAtBeginning(data["pm"]["storage"])) {
-                let diag = new vscode.Diagnostic(
+                const diag = new vscode.Diagnostic(
                   range,
                   "パラメータに変数を使う場合は先頭に'&'が必要です。",
                   vscode.DiagnosticSeverity.Error,
@@ -267,7 +266,7 @@ export class TyranoDiagnostic {
 
           // targetについての処理
           if (data["pm"]["target"] !== undefined) {
-            const tagFirstIndex: number = scenarioDocument
+            const tagFirstIndex = scenarioDocument
               .lineAt(data["line"])
               .text.indexOf(data["pm"]["target"]); // 該当行からタグの定義場所(開始位置)探す
             const tagLastIndex =
@@ -296,14 +295,13 @@ export class TyranoDiagnostic {
               }
             } else if (!this.isValueIsIncludeVariable(data["pm"]["storage"])) {
               //targetがundefinedじゃない &&storageがundefinedじゃない && storageが変数でもない
-
               //targetから*を外して表記ゆれ防ぐ
               data["pm"]["target"] = data["pm"]["target"].replace("*", "");
 
               //ファイル探索して、該当のラベルがあればisLabelExsitをtrueにして操作打ち切る
               //storageが指定されてない(undefined)ならscenarioに入ってるパス（自分自身のシナリオファイル）を入れる
               //storageが指定されてるなら指定先を取得
-              const storageScenarioDocument: vscode.TextDocument | undefined =
+              const storageScenarioDocument =
                 data["pm"]["storage"] === undefined
                   ? scenarioDocument
                   : this.infoWs.scenarioFileMap.get(
@@ -330,7 +328,7 @@ export class TyranoDiagnostic {
                 storageScenarioDocument.getText(),
               ); //構文解析
               let isLabelExsit: boolean = false; //targetで指定したラベルが存在しているかどうか
-              for (let storageData in storageParsedData) {
+              for (const storageData in storageParsedData) {
                 if (
                   storageParsedData[storageData]["pm"]["label_name"] ===
                   data["pm"]["target"]
@@ -419,10 +417,10 @@ export class TyranoDiagnostic {
    */
   private async detectJumpAndCallInIfStatement(
     absoluteScenarioFilePathMap: Map<string, vscode.TextDocument>,
-    diagnosticArray: any[],
+    diagnosticArray: UriAndMaybeDiagnostics[],
     projectPath: string,
   ) {
-    for (const [filePath, scenarioDocument] of absoluteScenarioFilePathMap) {
+    for (const [_filePath, scenarioDocument] of absoluteScenarioFilePathMap) {
       const projectPathOfDiagFile = await this.infoWs.getProjectPathByFilePath(
         scenarioDocument.fileName,
       );
@@ -434,8 +432,7 @@ export class TyranoDiagnostic {
       let isInIf: boolean = false; //if文の中にいるかどうか
       const parsedData = this.parser.parseText(scenarioDocument.getText()); //構文解析
       const diagnostics: vscode.Diagnostic[] = [];
-      for (let data of parsedData) {
-        //early return
+      for (const data of parsedData) {
         if (data["name"] === "comment") {
           continue;
         }
@@ -447,7 +444,6 @@ export class TyranoDiagnostic {
           isInIf = false;
         }
 
-        //条件式
         if (
           isInIf &&
           (data["name"] === "jump" || (isInIf && data["name"] === "call"))
@@ -476,19 +472,23 @@ export class TyranoDiagnostic {
     }
   }
 
-  private sumStringLengthsInObject(obj: any): number {
+  private sumStringLengthsInObject(obj: {
+    [key: string]: string | unknown;
+  }): number {
+    const WRAPPER_LENGTH = 4; //ダブルクォート*2とイコールと半角スペースの分
+    const FRONT_LENGTH = 2; //アットマークor[]と、最初の半角スペース分
+    // ? `"@ ".length == 2` but `"[ ]".length == 3`
+
     let totalLength = 0;
-    const value = 4; //ダブルクォート*2とイコールと半角スペースの分
-    const firstValue = 2; //アットマークor[]と、最初の半角スペース分
-    totalLength += firstValue;
-    for (let key in obj) {
+    totalLength += FRONT_LENGTH;
+    for (const key in obj) {
       if (typeof key === "string") {
         totalLength += key.length;
       }
       if (typeof obj[key] === "string") {
         totalLength += obj[key].length;
       }
-      totalLength += value;
+      totalLength += WRAPPER_LENGTH;
     }
     return totalLength;
   }
