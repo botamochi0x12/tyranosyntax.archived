@@ -4,6 +4,90 @@ All notable changes to the "tyranosyntax" extension will be documented in this f
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.25.3]- 2024-10-16
+
+0.25.2で修正した内容に誤りがあったため修正しました。[issue#221](https://github.com/orukRed/tyranosyntax/issues/221)
+診断機能ON/OFFが逆になっていたため、正しく動作するように修正しました。
+
+## [0.25.2]- 2024-10-16
+
+- TyranoScript syntax.autoDiagnostic.isEnabledが正しく動作していなかった不具合を修正しました。[issue#219](https://github.com/orukRed/tyranosyntax/issues/219)
+- CHANGELOGに、0.25.1の更新で「others/pluginフォルダの中身をパーサーかけないようにしました。」という記載が漏れていたので追記しました。
+
+## [0.25.1]- 2024-10-11
+
+- `[macro]`タグでタグを定義したとき、頭にコメントアウトがないと正しく補完されない不具合を修正しました。[issue#212](https://github.com/orukRed/tyranosyntax/issues/212)
+- others/pluginフォルダの中身をパーサーかけないようにしました。[issue#213](https://github.com/orukRed/tyranosyntax/issues/213)
+  - 必要な場合は、設定から`TyranoScript syntax.parser.read_plugin`の値を変更してください。
+
+
+## [0.25.0]- 2024-10-05
+
+- 診断機能のONOFFを切り替えられるようにしました。[issue#216](https://github.com/orukRed/tyranosyntax/issues/216)
+  - 設定から`TyranoScript syntax.execute.diagnostic`の値を修正してください。
+以下のように定義されていますので、不要なものをfalseに変更しvscodeを再起動することで診断機能をOFFにできます。
+
+```json
+  "TyranoScript syntax.execute.diagnostic": {
+    "undefinedMacro": true,
+    "missingScenariosAndLabels": true,
+    "jumpAndCallInIfStatement": true
+  }
+```
+
+## [0.24.13]- 2024-09-21
+
+TyranoScript_syntaxのアイコンを変更しました。
+
+## [0.24.12]- 2024-09-18
+
+- others/pluginフォルダに入っている`.ks`,`js`ファイルを読み込まないようにしました。[issue#213](https://github.com/orukRed/tyranosyntax/issues/213)
+  - 本修正は、ライブラリを追加したことにより拡張機能が起動しなくなる問題を解決するためのものです。
+  - 基本的には読み込まない（初期設定のまま）を推奨しますが、読み込ませたい場合は設定から変更可能です。
+- `loadcss`タグの`file`パラメータの補完先を正しく修正しました。
+
+## [0.24.11]- 2024-09-04
+
+- v6のタグに対応しました。
+- 設定からタグホバー、補完を英語に切り替えられるようにしました。[issue#180](https://github.com/orukRed/tyranosyntax/issues/180)
+- chara_layerタグでpartに日本語が使われていた場合に、storageで指定した画像をツールチップで表示できないバグを修正しました。
+
+## [0.24.10]- 2024-08-28
+
+- scenarioフォルダの中に再帰的なフォルダを置き、storageを指定しない場合TyranoJumpProviderが起動しなくなる問題を修正しました。[issue#209](https://github.com/orukRed/tyranosyntax/issues/209)
+
+## [0.24.9]- 2024-08-06
+
+- ラベルでハイフンがハイライトされないようにしました。[issue#198](https://github.com/orukRed/tyranosyntax/issues/198)
+
+## [0.24.8]- 2024-08-02
+
+- #での補完時、行頭に#がある場合にしか補完が効かない問題を修正しました。[PR#191](https://github.com/orukRed/tyranosyntax/issues/191)
+
+## [0.24.7]- 2024-07-31
+
+- #での補完でnameではなくjnameの値が出力されてしまう問題を修正しました。[PR#187](https://github.com/orukRed/tyranosyntax/issues/187)
+- region endregionで囲った個所が正しく閉じられない問題を修正しました。 [PR#186](https://github.com/orukRed/tyranosyntax/pull/186)
+- READMEに折りたたみとショートカットについての説明を追加しました。
+
+## [0.24.6]- 2024-07-29
+
+- `@html` `@endhtml`で囲ったときにただしくハイライトされない問題を修正しました。[PR#182](https://github.com/orukRed/tyranosyntax/pull/182)
+- jnameが未指定のchara_newタグがあるときに`#`からの補完ができなくなる問題の修正[issue#183](https://github.com/orukRed/tyranosyntax/issues/183)
+- `TyranoScript syntax.resource.extension`の設定にoggが複数あることによりoggファイルの補完ができない問題の修正[issue#184](https://github.com/orukRed/tyranosyntax/issues/184)
+
+## [0.24.5]- 2024-07-27
+
+- 拡張機能読み込み時に.gitフォルダを無視するようにしました。[issue#178](https://github.com/orukRed/tyranosyntax/issues/178)
+
+## [0.24.4]- 2024-07-21
+
+- 拡張機能マーケットプレイスでの視認性を上げるため、アイコンを設定しました。
+
+## [0.24.3]- 2024-07-20
+
+- iscript内部にコメントアウトがあったときに変数補完されない問題を修正しました。[issue#172](https://github.com/orukRed/tyranosyntax/issues/172)
+
 ## [0.24.2]- 2024-07-11
 
 - ツールチップにサンプルコードがなかった問題を修正しました。[issue#160](https://github.com/orukRed/tyranosyntax/issues/160)

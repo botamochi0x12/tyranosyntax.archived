@@ -187,6 +187,18 @@ Ctrl + Spaceでタグやパラメータ、変数、ラベル、ファイルパ�
 - ジャンプ系タグのstorage,targetに変数を使用する場合、先頭に&があるかどうかの検出(&がない場合エラー)
 - 使用しているタグがプロジェクトに存在するかの検出
 
+不要な場合、設定から`TyranoScript syntax.execute.diagnostic`の値を変更してください。
+
+以下のように定義されていますので、不要なキーの値をfalseに変更しvscodeを再起動することで診断機能をOFFにできます。
+
+```json
+  "TyranoScript syntax.execute.diagnostic": {
+    "undefinedMacro": true,
+    "missingScenariosAndLabels": true,
+    "jumpAndCallInIfStatement": true
+  }
+```
+
 ### ドキュメントツールチップ表示（Hover）
 
 ![](src/readme_img/hover.gif)
@@ -245,10 +257,41 @@ Ctrl + Spaceでタグやパラメータ、変数、ラベル、ファイルパ�
 ![](src/readme_img/flowchart1.png)
 ![](src/readme_img/flowchart2.png)
 
+### 処理のフォールディング（折り畳み）
+
+`region`と`endregion`で囲まれた範囲を折り畳むことができます。
+
+以下のような記述を行うことで、折り畳むことができます。
+```tyrano
+; region
+[p]
+"This line can be folded."
+; endregion
+```
+
+## ショートカット一覧
+
+- Ctrl + Space : タグや変数などの補完
+- F12 : タグの定義元へ移動
+- Alt + J : jump系タグのジャンプ先へ移動
+- Ctrl + Alt + P : プレビュー機能（β版）
+- Ctrl + Alt + F : フローチャート表示
+- Ctrl + / : コメントアウト
+
 ## 設定ファイルについて
 
 TyranoScript_syntaxの一部機能は設定ファイルから変更を行うことができます。
 特にマクロタグやjsから定義したタグの補完やファイルジャンプを行う場合、設定ファイルを見直してください。
+
+### 言語設定
+
+TyranoScript syntax.languageで言語設定を変更することができます。
+
+日本語と英語にのみ対応しています。
+
+You can change the language settings with TyranoScript syntax.language.
+
+Only Japanese and English are supported.
 
 ## Release Notes
 
@@ -260,7 +303,7 @@ TyranoScript_syntaxの一部機能は設定ファイルから変更を行うこ�
 バグ報告や機能追加の要望お待ちしております！
 以下のいずれかの方法で報告をお願いします。
 
-- [Googleフォームから報告](https://orukred.github.io/Contact.html)
+- [Googleフォームから報告](https://forms.gle/PnWAzHiN8MYKhUrG6)
 - [Twitter(@orukred)でリプライやDM](https://twitter.com/OrukRed)
 - [Githubにissueを立てる（バグのみ）](https://github.com/orukRed/tyranosyntax/issues)
 
