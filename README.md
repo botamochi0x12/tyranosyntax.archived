@@ -1,5 +1,11 @@
 # TyranoScript_syntax
 
+⚠️ このリポジトリはアーカイブされました ⚠️
+⚠️ 新しい [TyranoSyntax のリポジトリ](https://github.com/botamochi0x12/tyranosyntax) を参照してください ⚠️
+
+⚠️ This repo has got archived ⚠️
+⚠️ Check out the new(er) [TyranoSyntax repo](https://github.com/botamochi0x12/tyranosyntax) ⚠️
+
  [【ENGLISH README】](./README_EN.md)
 
 [ティラノスクリプト](https://tyrano.jp/)でのゲーム開発のサポートを行う拡張機能です。
